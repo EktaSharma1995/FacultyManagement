@@ -76,26 +76,37 @@ public class DB {
 
     }
     
-    public static List<Course> searchCourse(String title) throws DBException, Exception {
-        String sql = "select code,title, credits, description,firstname, lastname, term from course c,faculty f, assignment a where c.code=a.code AND f.id=a.id";
-        List<Course> courseList = new ArrayList<>();
+    public static String displayDetails() throws DBException, Exception {
+        String sql = "select c.code as code ,c.title as title, c.credits as credits, "
+                + "c.description as description, f.firstname as firstname, f.lastname as lastname, "
+                + "a.term as term from course c,faculty f, assignment a where c.code=a.code AND f.id=a.id";
         try {
             Connection connection = DBUtil.getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
             
             ResultSet rs = ps.executeQuery();
+            StringBuilder strBuilder = new StringBuilder();
 
             while (rs.next()) {
-                Course courseObj = new Course();
-                courseObj.setCode(rs.getString("code"));
-                courseObj.setTitle(rs.getString("title"));
-                courseObj.setCredits(rs.getInt("credits"));
-                courseObj.setDescription(rs.getString("description"));
-
-                courseList.add(courseObj);
+                strBuilder.append("code: ")
+                        .append(rs.getString("code"))
+                        .append(", course title: ")
+                        .append(rs.getString("title"))
+                        .append(", credits: ")
+                        .append(rs.getInt("credits"))
+                        .append(", description: ")
+                        .append(rs.getString("description"))
+                        .append(", firstname: ")
+                        .append(rs.getString("firstname"))
+                        .append(", lastname: ")
+                        .append(rs.getString("lastname"))
+                        .append(", term: ")
+                        .append(rs.getString("term"))
+                        .append("\n");
+                
             }
 
-            return courseList;
+            return strBuilder.toString();
 
         } catch (SQLException sqle) {
             throw new DBException(sqle);

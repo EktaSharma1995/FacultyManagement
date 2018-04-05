@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -47,16 +48,15 @@ public class Lab_5_DB extends Application {
         Button exitBtn = new Button("Exit");
         Button addFacultyBtn = new Button("Add faculty");
         Button assignFacultyBtn = new Button("Assign faculty");
-        Button modifyAssignedFaculty = new Button("Modify Faculty");
+        Button modifyAssignedFacultybtn = new Button("Modify Faculty");
+        Button displayAllbtn = new Button("Display");
         
-        hboxForButton.getChildren().addAll(addBtn, findBtn, updateBtn,deleteBtn,exitBtn,addFacultyBtn,assignFacultyBtn,modifyAssignedFaculty);
+        hboxForButton.getChildren().addAll(addBtn, findBtn, updateBtn,deleteBtn,exitBtn,addFacultyBtn,assignFacultyBtn,modifyAssignedFacultybtn,displayAllbtn);
         hboxForButton.setAlignment(Pos.CENTER);
         
-        TextArea txtarea = new TextArea();
-
-        
-//        VBox vbox = new VBox(25);
-//        vbox.getChildren().addAll(hboxForButton);
+        TextArea courseDetailTextArea = new TextArea();
+        courseDetailTextArea.setMaxHeight(500);
+        courseDetailTextArea.setMaxWidth(800);
 
         HBox coursePane = new HBox(20);
         txtCode = new TextField();
@@ -111,8 +111,10 @@ public class Lab_5_DB extends Application {
         mainPane.setHgap(5.5);
         mainPane.setVgap(5.5);
         
-        
+        courseDetailTextArea.setPadding(new Insets(15, 12, 15, 12));
+    
         pane.setBottom(hboxForButton);
+        pane.setTop(courseDetailTextArea);
         pane.setCenter(mainPane);
         pane.setRight(facultyPane);
         //pane.setRight(txtarea);
@@ -125,7 +127,7 @@ public class Lab_5_DB extends Application {
             
         @Override
         public void handle(ActionEvent event) {
-            txtarea.setText("");
+            courseDetailTextArea.setText("");
             try {
                     
                 if (txtCode.getText().trim().equals("")){
@@ -170,7 +172,7 @@ public class Lab_5_DB extends Application {
             
             @Override
             public void handle(ActionEvent event) {
-                txtarea.clear();
+                courseDetailTextArea.clear();
                   try { 
                     courseList = CourseDB.searchCourse(txtTitle.getText());
                  
@@ -179,7 +181,7 @@ public class Lab_5_DB extends Application {
                         alert.setContentText("NOT FOUND");
                         alert.show();
                     } else {
-                        txtarea.appendText(courseList.toString() + "\n");
+                        courseDetailTextArea.appendText(courseList.toString() + "\n");
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setContentText("FOUND");
                         alert.show();
@@ -196,7 +198,7 @@ public class Lab_5_DB extends Application {
             
             @Override
             public void handle(ActionEvent event) {
-                txtarea.clear();
+                courseDetailTextArea.clear();
                 try {
                     
                     if (txtCode.getText().trim().equals("")){
@@ -278,7 +280,7 @@ public class Lab_5_DB extends Application {
             
         @Override
         public void handle(ActionEvent event) {
-            txtarea.setText("");
+            courseDetailTextArea.setText("");
             try {
                     
                     if (txtIdOfFaculty.getText().trim().equals("")){
@@ -319,7 +321,7 @@ public class Lab_5_DB extends Application {
             
         @Override
         public void handle(ActionEvent event) {
-            txtarea.setText("");
+            courseDetailTextArea.setText("");
             try {
                     
                     if (txtCodeAssignToFaculty.getText().trim().equals("")){
@@ -358,11 +360,11 @@ public class Lab_5_DB extends Application {
             }
         });
         
-        modifyAssignedFaculty.setOnAction(new EventHandler<ActionEvent>() {
+        modifyAssignedFacultybtn.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
-                txtarea.clear();
+                courseDetailTextArea.clear();
                 try {
                     
                     if (txtCodeAssignToFaculty.getText().trim().equals("")){
@@ -401,6 +403,21 @@ public class Lab_5_DB extends Application {
             
         });
         
+         displayAllbtn.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                courseDetailTextArea.clear();
+                  try { 
+                    courseDetailTextArea.setText(DB.displayDetails());
+                   } catch (Exception ex) {                    
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText(ex.getMessage());
+                    alert.show();
+                }
+            }
+        });
+//        
         
         return pane;
     }
